@@ -522,16 +522,7 @@ export function createSeedData(): AppData {
       notifyFollowUps: true,
       notifyTasks: true,
     },
-    users: [
-      { id: "u1", name: "أ. نورة القحطاني", role: "مرشدة طلابية", email: "noura@moe.edu.sa", active: true },
-      { id: "u2", name: "أ. هند العمري", role: "مديرة", email: "hind@moe.edu.sa", active: true },
-      { id: "u3", name: "أ. عبير الشهري", role: "مشرفة", email: "abeer@moe.edu.sa", active: false },
-    ],
-    activities: [
-      { id: "a1", date: "2026-09-22", text: "تم تسجيل جلسة فردية جديدة (قلق الاختبارات)" },
-      { id: "a2", date: "2026-09-21", text: "تحديث كشف الغياب ورصد ٦ حالات جديدة" },
-      { id: "a3", date: "2026-09-20", text: "إضافة طالبة جديدة إلى تصنيف الضعيفات" },
-      { id: "a4", date: "2026-09-17", text: "اجتماع لجنة التوجيه الطلابي ومناقشة ٦ حالات" },
-    ],
+    users: [],
+    activities: [],
   };
 }
