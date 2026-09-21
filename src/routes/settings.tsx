@@ -287,12 +287,12 @@ function UsersCard() {
 
         <div className="grid gap-3 border-t border-border/60 pt-4 md:grid-cols-4">
           <div className="space-y-2">
-            <Label>الاسم</Label>
-            <Input value={name} onChange={(e) => setName(e.target.value)} />
+            <Label htmlFor="nu-name">الاسم</Label>
+            <Input id="nu-name" value={name} onChange={(e) => setName(e.target.value)} />
           </div>
           <div className="space-y-2">
-            <Label>كود الدخول</Label>
-            <Input value={code} onChange={(e) => setCode(e.target.value)} />
+            <Label htmlFor="nu-code">كود الدخول</Label>
+            <Input id="nu-code" value={code} onChange={(e) => setCode(e.target.value)} />
           </div>
           <div className="space-y-2">
             <Label>البريد (اختياري)</Label>
