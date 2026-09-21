@@ -28,7 +28,7 @@ import { newId, todayISO, useStore } from "@/lib/store";
 import { STUDENT_CATEGORIES } from "@/lib/seed";
 import type { Student, StudentCategory } from "@/lib/types";
 
-export const Route = createFileRoute("/students")({
+export const Route = createFileRoute("/students/")({
   head: () => ({
     meta: [
       { title: "متابعة الطالبات — منصة التوجيه الطلابي" },
