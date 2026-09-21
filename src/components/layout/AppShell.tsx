@@ -83,7 +83,7 @@ export function AppShell({
   actions?: ReactNode;
   children: ReactNode;
 }) {
-  const { data, theme, toggleTheme } = useStore();
+  const { data, theme, toggleTheme, hydrated, currentUser, signOut } = useStore();
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -93,6 +93,9 @@ export function AppShell({
     e.preventDefault();
     navigate({ to: "/search", search: { q: query } });
   }
+
+  if (!hydrated) return <div className="min-h-screen bg-background" />;
+  if (!currentUser) return <AuthGate />;
 
   return (
     <div className="min-h-screen bg-background text-foreground">
