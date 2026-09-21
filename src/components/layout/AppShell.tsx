@@ -8,6 +8,7 @@ import {
   GraduationCap,
   IdCard,
   LayoutDashboard,
+  LogOut,
   MessagesSquare,
   Menu,
   Moon,
@@ -32,6 +33,7 @@ import { alerts } from "@/lib/derive";
 import { useStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
+import { AuthGate } from "./AuthGate";
 import { NAV_ITEMS } from "./nav";
 
 const ICONS: Record<string, LucideIcon> = {
