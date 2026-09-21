@@ -15,7 +15,9 @@ import { Route as CounselorRouteImport } from './routes/counselor'
 import { Route as PlanRouteImport } from './routes/plan'
 import { Route as ProgramsRouteImport } from './routes/programs'
 import { Route as ReportsRouteImport } from './routes/reports'
+import { Route as SearchRouteImport } from './routes/search'
 import { Route as ServicesRouteImport } from './routes/services'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as StudentsRouteImport } from './routes/students'
 import { Route as ProgramsIdRouteImport } from './routes/programs.$id'
 import { Route as StudentsIdRouteImport } from './routes/students.$id'
@@ -50,9 +52,19 @@ const ReportsRoute = ReportsRouteImport.update({
   path: '/reports',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ServicesRoute = ServicesRouteImport.update({
   id: '/services',
   path: '/services',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
 const StudentsRoute = StudentsRouteImport.update({
@@ -78,7 +90,9 @@ export interface FileRoutesByFullPath {
   '/plan': typeof PlanRoute
   '/programs': typeof ProgramsRouteWithChildren
   '/reports': typeof ReportsRoute
+  '/search': typeof SearchRoute
   '/services': typeof ServicesRoute
+  '/settings': typeof SettingsRoute
   '/students': typeof StudentsRouteWithChildren
   '/programs/$id': typeof ProgramsIdRoute
   '/students/$id': typeof StudentsIdRoute
@@ -90,7 +104,9 @@ export interface FileRoutesByTo {
   '/plan': typeof PlanRoute
   '/programs': typeof ProgramsRouteWithChildren
   '/reports': typeof ReportsRoute
+  '/search': typeof SearchRoute
   '/services': typeof ServicesRoute
+  '/settings': typeof SettingsRoute
   '/students': typeof StudentsRouteWithChildren
   '/programs/$id': typeof ProgramsIdRoute
   '/students/$id': typeof StudentsIdRoute
@@ -103,7 +119,9 @@ export interface FileRoutesById {
   '/plan': typeof PlanRoute
   '/programs': typeof ProgramsRouteWithChildren
   '/reports': typeof ReportsRoute
+  '/search': typeof SearchRoute
   '/services': typeof ServicesRoute
+  '/settings': typeof SettingsRoute
   '/students': typeof StudentsRouteWithChildren
   '/programs/$id': typeof ProgramsIdRoute
   '/students/$id': typeof StudentsIdRoute
@@ -117,7 +135,9 @@ export interface FileRouteTypes {
     | '/plan'
     | '/programs'
     | '/reports'
+    | '/search'
     | '/services'
+    | '/settings'
     | '/students'
     | '/programs/$id'
     | '/students/$id'
@@ -129,7 +149,9 @@ export interface FileRouteTypes {
     | '/plan'
     | '/programs'
     | '/reports'
+    | '/search'
     | '/services'
+    | '/settings'
     | '/students'
     | '/programs/$id'
     | '/students/$id'
@@ -141,7 +163,9 @@ export interface FileRouteTypes {
     | '/plan'
     | '/programs'
     | '/reports'
+    | '/search'
     | '/services'
+    | '/settings'
     | '/students'
     | '/programs/$id'
     | '/students/$id'
@@ -154,7 +178,9 @@ export interface RootRouteChildren {
   PlanRoute: typeof PlanRoute
   ProgramsRoute: typeof ProgramsRouteWithChildren
   ReportsRoute: typeof ReportsRoute
+  SearchRoute: typeof SearchRoute
   ServicesRoute: typeof ServicesRoute
+  SettingsRoute: typeof SettingsRoute
   StudentsRoute: typeof StudentsRouteWithChildren
 }
 
@@ -202,11 +228,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReportsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/services': {
       id: '/services'
       path: '/services'
       fullPath: '/services'
       preLoaderRoute: typeof ServicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/students': {
@@ -264,7 +304,9 @@ const rootRouteChildren: RootRouteChildren = {
   PlanRoute: PlanRoute,
   ProgramsRoute: ProgramsRouteWithChildren,
   ReportsRoute: ReportsRoute,
+  SearchRoute: SearchRoute,
   ServicesRoute: ServicesRoute,
+  SettingsRoute: SettingsRoute,
   StudentsRoute: StudentsRouteWithChildren,
 }
 export const routeTree = rootRouteImport

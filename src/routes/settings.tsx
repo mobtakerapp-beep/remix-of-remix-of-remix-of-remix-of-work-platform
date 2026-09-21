@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { createSeedData } from "@/lib/seed";
 import { exportJson } from "@/lib/export";
 import { useStore } from "@/lib/store";
 
@@ -208,11 +209,5 @@ function SettingsPage() {
 }
 
 function createDefaultSettings() {
-  // Re-read from store after reset (resetData returns seed synchronously inside provider).
-  return settingsFallback;
+  return createSeedData().settings;
 }
-
-// Placeholder replaced below with live settings after reset via page reload-free approach.
-let settingsFallback: ReturnType<typeof import("@/lib/seed").createSeedData>["settings"];
-
-export function _unused() {}
