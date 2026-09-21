@@ -96,6 +96,7 @@ export function AppShell({
   const [query, setQuery] = useState("");
   const [mobileOpen, setMobileOpen] = useState(false);
   const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const [installBannerDismissed, setInstallBannerDismissed] = useState(false);
   const upcoming = alerts(data).slice(0, 8);
 
   useEffect(() => {
@@ -124,7 +125,7 @@ export function AppShell({
   if (!currentUser) return <AuthGate />;
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background pb-[env(safe-area-inset-bottom)] text-foreground">
       <header className="sticky top-0 z-40 border-b border-border/70 bg-card/85 backdrop-blur print:hidden">
         <div className="flex items-center gap-3 px-4 py-3">
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
@@ -229,6 +230,24 @@ export function AppShell({
           </div>
         </div>
       </header>
+
+      {installPrompt && !installBannerDismissed && (
+        <div className="fixed inset-x-3 bottom-3 z-50 md:hidden" style={{ paddingBottom: "env(safe-area-inset-bottom)" }}>
+          <div className="flex items-center gap-3 rounded-2xl border border-border/70 bg-card/95 p-3 shadow-2xl backdrop-blur">
+            <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-primary text-primary-foreground shadow-sm">
+              <Download className="size-5" />
+            </span>
+            <div className="min-w-0 flex-1 text-start">
+              <p className="text-sm font-bold">ثبّت منصة إرشاد طلابي</p>
+              <p className="mt-0.5 text-xs text-muted-foreground">وصول أسرع من شاشة هاتفك بدون فتح المتصفح كل مرة.</p>
+            </div>
+            <div className="flex shrink-0 gap-1.5">
+              <Button variant="ghost" size="icon" onClick={() => setInstallBannerDismissed(true)} aria-label="إغلاق">×</Button>
+              <Button size="sm" onClick={installApp} className="rounded-xl">تثبيت</Button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="flex">
         <aside className="sticky top-[61px] hidden h-[calc(100vh-61px)] w-64 shrink-0 overflow-y-auto border-s border-border/70 bg-sidebar lg:block print:hidden">
