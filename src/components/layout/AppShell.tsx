@@ -17,8 +17,9 @@ import {
   Sun,
   Users,
   type LucideIcon,
+  Download,
 } from "lucide-react";
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -89,7 +90,25 @@ export function AppShell({
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const upcoming = alerts(data).slice(0, 8);
+
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (event: Event) => {
+      event.preventDefault();
+      setInstallPrompt(event as BeforeInstallPromptEvent);
+    };
+
+    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+    return () => window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+  }, []);
+
+  async function installApp() {
+    if (!installPrompt) return;
+    await installPrompt.prompt();
+    await installPrompt.userChoice;
+    setInstallPrompt(null);
+  }
 
   function submitSearch(e: React.FormEvent) {
     e.preventDefault();
@@ -144,6 +163,18 @@ export function AppShell({
           </form>
 
           <div className="ms-auto flex items-center gap-1 md:ms-0">
+            {installPrompt && (
+              <Button
+                variant="default"
+                size="sm"
+                onClick={installApp}
+                className="hidden gap-2 rounded-xl sm:inline-flex"
+                aria-label="تثبيت التطبيق"
+              >
+                <Download className="size-4" />
+                تثبيت التطبيق
+              </Button>
+            )}
             <Popover>
               <PopoverTrigger asChild>
                 <Button variant="ghost" size="icon" className="relative" aria-label="التنبيهات">
