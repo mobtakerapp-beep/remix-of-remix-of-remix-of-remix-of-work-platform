@@ -37,6 +37,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [data, setRaw] = useState<AppData>(() => createSeedData());
   const [hydrated, setHydrated] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark">("light");
+  const [currentUserId, setCurrentUserId] = useState<ID | null>(null);
 
   useEffect(() => {
     try {
@@ -44,11 +45,19 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       if (stored) setRaw(JSON.parse(stored) as AppData);
       const storedTheme = localStorage.getItem(THEME_KEY);
       if (storedTheme === "dark" || storedTheme === "light") setTheme(storedTheme);
+      const session = localStorage.getItem(SESSION_KEY);
+      if (session) setCurrentUserId(session);
     } catch {
       /* ignore corrupt storage */
     }
     setHydrated(true);
   }, []);
+
+  useEffect(() => {
+    if (!hydrated) return;
+    if (currentUserId) localStorage.setItem(SESSION_KEY, currentUserId);
+    else localStorage.removeItem(SESSION_KEY);
+  }, [currentUserId, hydrated]);
 
   useEffect(() => {
     if (!hydrated) return;
