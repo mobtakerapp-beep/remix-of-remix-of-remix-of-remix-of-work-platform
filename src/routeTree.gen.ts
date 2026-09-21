@@ -10,11 +10,27 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CalendarRouteImport } from './routes/calendar'
 import { Route as CounselorRouteImport } from './routes/counselor'
+import { Route as PlanRouteImport } from './routes/plan'
+import { Route as ProgramsRouteImport } from './routes/programs'
+import { Route as ReportsRouteImport } from './routes/reports'
+import { Route as SearchRouteImport } from './routes/search'
+import { Route as ServicesRouteImport } from './routes/services'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as StudentsRouteImport } from './routes/students'
+import { Route as ProgramsIdRouteImport } from './routes/programs.$id'
+import { Route as StudentsIndexRouteImport } from './routes/students.index'
+import { Route as StudentsIdRouteImport } from './routes/students.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CalendarRoute = CalendarRouteImport.update({
+  id: '/calendar',
+  path: '/calendar',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CounselorRoute = CounselorRouteImport.update({
@@ -22,31 +38,160 @@ const CounselorRoute = CounselorRouteImport.update({
   path: '/counselor',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PlanRoute = PlanRouteImport.update({
+  id: '/plan',
+  path: '/plan',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProgramsRoute = ProgramsRouteImport.update({
+  id: '/programs',
+  path: '/programs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReportsRoute = ReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesRoute = ServicesRouteImport.update({
+  id: '/services',
+  path: '/services',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StudentsRoute = StudentsRouteImport.update({
+  id: '/students',
+  path: '/students',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProgramsIdRoute = ProgramsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => ProgramsRoute,
+} as any)
+const StudentsIndexRoute = StudentsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => StudentsRoute,
+} as any)
+const StudentsIdRoute = StudentsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => StudentsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/calendar': typeof CalendarRoute
   '/counselor': typeof CounselorRoute
+  '/plan': typeof PlanRoute
+  '/programs': typeof ProgramsRouteWithChildren
+  '/reports': typeof ReportsRoute
+  '/search': typeof SearchRoute
+  '/services': typeof ServicesRoute
+  '/settings': typeof SettingsRoute
+  '/students': typeof StudentsRouteWithChildren
+  '/programs/$id': typeof ProgramsIdRoute
+  '/students/$id': typeof StudentsIdRoute
+  '/students/': typeof StudentsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/calendar': typeof CalendarRoute
   '/counselor': typeof CounselorRoute
+  '/plan': typeof PlanRoute
+  '/programs': typeof ProgramsRouteWithChildren
+  '/reports': typeof ReportsRoute
+  '/search': typeof SearchRoute
+  '/services': typeof ServicesRoute
+  '/settings': typeof SettingsRoute
+  '/programs/$id': typeof ProgramsIdRoute
+  '/students/$id': typeof StudentsIdRoute
+  '/students': typeof StudentsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/calendar': typeof CalendarRoute
   '/counselor': typeof CounselorRoute
+  '/plan': typeof PlanRoute
+  '/programs': typeof ProgramsRouteWithChildren
+  '/reports': typeof ReportsRoute
+  '/search': typeof SearchRoute
+  '/services': typeof ServicesRoute
+  '/settings': typeof SettingsRoute
+  '/students': typeof StudentsRouteWithChildren
+  '/programs/$id': typeof ProgramsIdRoute
+  '/students/$id': typeof StudentsIdRoute
+  '/students/': typeof StudentsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/counselor'
+  fullPaths:
+    | '/'
+    | '/calendar'
+    | '/counselor'
+    | '/plan'
+    | '/programs'
+    | '/reports'
+    | '/search'
+    | '/services'
+    | '/settings'
+    | '/students'
+    | '/programs/$id'
+    | '/students/$id'
+    | '/students/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/counselor'
-  id: '__root__' | '/' | '/counselor'
+  to:
+    | '/'
+    | '/calendar'
+    | '/counselor'
+    | '/plan'
+    | '/programs'
+    | '/reports'
+    | '/search'
+    | '/services'
+    | '/settings'
+    | '/programs/$id'
+    | '/students/$id'
+    | '/students'
+  id:
+    | '__root__'
+    | '/'
+    | '/calendar'
+    | '/counselor'
+    | '/plan'
+    | '/programs'
+    | '/reports'
+    | '/search'
+    | '/services'
+    | '/settings'
+    | '/students'
+    | '/programs/$id'
+    | '/students/$id'
+    | '/students/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CalendarRoute: typeof CalendarRoute
   CounselorRoute: typeof CounselorRoute
+  PlanRoute: typeof PlanRoute
+  ProgramsRoute: typeof ProgramsRouteWithChildren
+  ReportsRoute: typeof ReportsRoute
+  SearchRoute: typeof SearchRoute
+  ServicesRoute: typeof ServicesRoute
+  SettingsRoute: typeof SettingsRoute
+  StudentsRoute: typeof StudentsRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -58,6 +203,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/calendar': {
+      id: '/calendar'
+      path: '/calendar'
+      fullPath: '/calendar'
+      preLoaderRoute: typeof CalendarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/counselor': {
       id: '/counselor'
       path: '/counselor'
@@ -65,12 +217,116 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CounselorRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/plan': {
+      id: '/plan'
+      path: '/plan'
+      fullPath: '/plan'
+      preLoaderRoute: typeof PlanRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/programs': {
+      id: '/programs'
+      path: '/programs'
+      fullPath: '/programs'
+      preLoaderRoute: typeof ProgramsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reports': {
+      id: '/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof ReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services': {
+      id: '/services'
+      path: '/services'
+      fullPath: '/services'
+      preLoaderRoute: typeof ServicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/students': {
+      id: '/students'
+      path: '/students'
+      fullPath: '/students'
+      preLoaderRoute: typeof StudentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/programs/$id': {
+      id: '/programs/$id'
+      path: '/$id'
+      fullPath: '/programs/$id'
+      preLoaderRoute: typeof ProgramsIdRouteImport
+      parentRoute: typeof ProgramsRoute
+    }
+    '/students/': {
+      id: '/students/'
+      path: '/'
+      fullPath: '/students/'
+      preLoaderRoute: typeof StudentsIndexRouteImport
+      parentRoute: typeof StudentsRoute
+    }
+    '/students/$id': {
+      id: '/students/$id'
+      path: '/$id'
+      fullPath: '/students/$id'
+      preLoaderRoute: typeof StudentsIdRouteImport
+      parentRoute: typeof StudentsRoute
+    }
   }
 }
 
+interface ProgramsRouteChildren {
+  ProgramsIdRoute: typeof ProgramsIdRoute
+}
+
+const ProgramsRouteChildren: ProgramsRouteChildren = {
+  ProgramsIdRoute: ProgramsIdRoute,
+}
+
+const ProgramsRouteWithChildren = ProgramsRoute._addFileChildren(
+  ProgramsRouteChildren,
+)
+
+interface StudentsRouteChildren {
+  StudentsIdRoute: typeof StudentsIdRoute
+  StudentsIndexRoute: typeof StudentsIndexRoute
+}
+
+const StudentsRouteChildren: StudentsRouteChildren = {
+  StudentsIdRoute: StudentsIdRoute,
+  StudentsIndexRoute: StudentsIndexRoute,
+}
+
+const StudentsRouteWithChildren = StudentsRoute._addFileChildren(
+  StudentsRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CalendarRoute: CalendarRoute,
   CounselorRoute: CounselorRoute,
+  PlanRoute: PlanRoute,
+  ProgramsRoute: ProgramsRouteWithChildren,
+  ReportsRoute: ReportsRoute,
+  SearchRoute: SearchRoute,
+  ServicesRoute: ServicesRoute,
+  SettingsRoute: SettingsRoute,
+  StudentsRoute: StudentsRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

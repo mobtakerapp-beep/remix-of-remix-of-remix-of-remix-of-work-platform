@@ -10,7 +10,7 @@ function download(filename: string, content: string, mime: string) {
 
 export function exportCsv(filename: string, rows: Record<string, unknown>[]) {
   if (rows.length === 0) return;
-  const headers = Object.keys(rows[0]);
+  const headers = Object.keys(rows[0] ?? {});
   const escape = (v: unknown) => `"${String(v ?? "").replace(/"/g, '""')}"`;
   const csv = [
     headers.map(escape).join(","),
