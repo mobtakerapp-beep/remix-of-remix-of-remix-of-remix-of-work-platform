@@ -37,17 +37,17 @@ export const DAYS = ["الأحد", "الاثنين", "الثلاثاء", "الأ
 export function createSeedData(): AppData {
   return {
     counselor: {
-      name: "أ. نورة بنت عبدالله القحطاني",
-      jobNumber: "١٠٤٥٢٣٧",
-      school: "المتوسطة الثانية عشرة",
-      educationAdministration: "إدارة تعليم الرياض",
-      stage: "المرحلة المتوسطة",
+      name: "",
+      jobNumber: "",
+      school: "",
+      educationAdministration: "",
+      stage: "",
       academicYear: "١٤٤٧ هـ",
       term: "الفصل الدراسي الأول",
-      email: "noura.counselor@moe.edu.sa",
-      phone: "٠٥٥٤٤٣٣٢٢١",
-      qualification: "بكالوريوس علم نفس - ماجستير إرشاد تربوي",
-      experienceYears: "١٢ سنة",
+      email: "",
+      phone: "",
+      qualification: "",
+      experienceYears: "",
     },
     programs: [
       {
