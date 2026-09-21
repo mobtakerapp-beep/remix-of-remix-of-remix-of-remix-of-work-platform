@@ -200,6 +200,10 @@ export function AppShell({
             {actions && <div className="flex flex-wrap gap-2 print:hidden">{actions}</div>}
           </div>
           <div className={cn("space-y-6")}>{children}</div>
+          <footer className="mt-10 border-t border-border/60 pt-4 pb-2 text-center text-xs text-muted-foreground print:hidden">
+            <p>فكرة: أسماء الغافري</p>
+            <p className="mt-0.5">تصميم: مروة أبو بكر</p>
+          </footer>
         </main>
       </div>
     </div>
