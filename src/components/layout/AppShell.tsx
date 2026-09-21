@@ -8,6 +8,7 @@ import {
   GraduationCap,
   IdCard,
   LayoutDashboard,
+  LogOut,
   MessagesSquare,
   Menu,
   Moon,
@@ -32,6 +33,7 @@ import { alerts } from "@/lib/derive";
 import { useStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
+import { AuthGate } from "./AuthGate";
 import { NAV_ITEMS } from "./nav";
 
 const ICONS: Record<string, LucideIcon> = {
@@ -83,7 +85,7 @@ export function AppShell({
   actions?: ReactNode;
   children: ReactNode;
 }) {
-  const { data, theme, toggleTheme } = useStore();
+  const { data, theme, toggleTheme, hydrated, currentUser, signOut } = useStore();
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -93,6 +95,9 @@ export function AppShell({
     e.preventDefault();
     navigate({ to: "/search", search: { q: query } });
   }
+
+  if (!hydrated) return <div className="min-h-screen bg-background" />;
+  if (!currentUser) return <AuthGate />;
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -175,9 +180,15 @@ export function AppShell({
                 <Settings />
               </Button>
             </Link>
+            <Button variant="ghost" size="icon" onClick={signOut} aria-label="تسجيل الخروج">
+              <LogOut />
+            </Button>
             <div className="hidden ps-2 text-start leading-tight sm:block">
-              <p className="text-sm font-semibold">{data.counselor.name}</p>
-              <p className="text-xs text-muted-foreground">{data.settings.schoolName}</p>
+              <p className="text-sm font-semibold">{currentUser.name}</p>
+              <p className="text-xs text-muted-foreground">
+                {currentUser.role}
+                {data.settings.schoolName ? ` · ${data.settings.schoolName}` : ""}
+              </p>
             </div>
           </div>
         </div>

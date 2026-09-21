@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Download, FileDown, Moon, RotateCcw, Sun, Upload } from "lucide-react";
+import { Download, FileDown, Moon, RotateCcw, Sun, Trash2, Upload, UserPlus } from "lucide-react";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 
@@ -12,7 +12,8 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { createSeedData } from "@/lib/seed";
 import { exportJson } from "@/lib/export";
-import { useStore } from "@/lib/store";
+import { newId, useStore } from "@/lib/store";
+import type { AppUser, UserRole } from "@/lib/types";
 
 export const Route = createFileRoute("/settings")({
   head: () => ({
@@ -130,30 +131,7 @@ function SettingsPage() {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">المستخدمون والصلاحيات (واجهة تجريبية)</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-2">
-          {data.users.map((u) => (
-            <div key={u.id} className="flex items-center justify-between rounded-xl border border-border/70 px-4 py-3">
-              <div>
-                <p className="text-sm font-medium">{u.name}</p>
-                <p className="text-xs text-muted-foreground">{u.email}</p>
-              </div>
-              <div className="flex items-center gap-2">
-                <Badge variant="secondary">{u.role}</Badge>
-                <Badge variant={u.active ? "default" : "outline"}>
-                  {u.active ? "نشط" : "موقوف"}
-                </Badge>
-              </div>
-            </div>
-          ))}
-          <p className="text-xs text-muted-foreground">
-            هذه نسخة تجريبية؛ إدارة المستخدمين الفعلية تتطلب تفعيل تسجيل الدخول.
-          </p>
-        </CardContent>
-      </Card>
+      <UsersCard />
 
       <Card>
         <CardHeader>
@@ -197,14 +175,151 @@ function SettingsPage() {
             onClick={() => {
               resetData();
               setSettings(createDefaultSettings());
-              toast.success("تمت استعادة البيانات التجريبية");
+              toast.success("تمت استعادة الإعدادات الافتراضية");
             }}
           >
-            <RotateCcw /> استعادة البيانات التجريبية
+            <RotateCcw /> تفريغ جميع البيانات
           </Button>
         </CardContent>
       </Card>
     </AppShell>
+  );
+}
+
+function UsersCard() {
+  const { data, setData, currentUser, isManager, logActivity } = useStore();
+  const [name, setName] = useState("");
+  const [code, setCode] = useState("");
+  const [email, setEmail] = useState("");
+  const [role, setRole] = useState<UserRole>("مرشدة طلابية");
+
+  if (!isManager) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">حسابي</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-1 text-sm">
+          <p className="font-medium">{currentUser?.name}</p>
+          <p className="text-muted-foreground">{currentUser?.role}</p>
+          <p className="text-xs text-muted-foreground">
+            تظهر لك ملفات الطالبات المسجلة باسمك فقط. إدارة المستخدمين متاحة للمديرة.
+          </p>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  function addUser() {
+    if (!name.trim() || code.trim().length < 4) {
+      toast.error("أدخلي الاسم وكود دخول من 4 أرقام أو أكثر");
+      return;
+    }
+    if (data.users.some((u) => u.code.trim() === code.trim())) {
+      toast.error("كود الدخول مستخدم مسبقاً");
+      return;
+    }
+    const user: AppUser = {
+      id: newId("u"),
+      name: name.trim(),
+      role,
+      code: code.trim(),
+      email: email.trim(),
+      active: true,
+    };
+    setData((prev) => ({ ...prev, users: [...prev.users, user] }));
+    logActivity(`إضافة مستخدمة: ${user.name}`);
+    toast.success("تمت إضافة المستخدمة");
+    setName("");
+    setCode("");
+    setEmail("");
+    setRole("مرشدة طلابية");
+  }
+
+  function toggleActive(id: string) {
+    setData((prev) => ({
+      ...prev,
+      users: prev.users.map((u) => (u.id === id ? { ...u, active: !u.active } : u)),
+    }));
+  }
+
+  function removeUser(id: string) {
+    setData((prev) => ({ ...prev, users: prev.users.filter((u) => u.id !== id) }));
+    toast.success("تم حذف المستخدمة");
+  }
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-base">المستخدمون والصلاحيات</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        <div className="space-y-2">
+          {data.users.map((u) => (
+            <div
+              key={u.id}
+              className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-border/70 px-4 py-3"
+            >
+              <div>
+                <p className="text-sm font-medium">{u.name}</p>
+                <p className="text-xs text-muted-foreground">
+                  كود الدخول: {u.code}
+                  {u.email ? ` · ${u.email}` : ""}
+                </p>
+              </div>
+              <div className="flex items-center gap-2">
+                <Badge variant="secondary">{u.role}</Badge>
+                <Badge variant={u.active ? "default" : "outline"}>{u.active ? "نشط" : "موقوف"}</Badge>
+                {u.id !== currentUser?.id && (
+                  <>
+                    <Button size="sm" variant="outline" onClick={() => toggleActive(u.id)}>
+                      {u.active ? "إيقاف" : "تنشيط"}
+                    </Button>
+                    <Button size="sm" variant="ghost" onClick={() => removeUser(u.id)}>
+                      <Trash2 />
+                    </Button>
+                  </>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="grid gap-3 border-t border-border/60 pt-4 md:grid-cols-4">
+          <div className="space-y-2">
+            <Label htmlFor="nu-name">الاسم</Label>
+            <Input id="nu-name" value={name} onChange={(e) => setName(e.target.value)} />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="nu-code">كود الدخول</Label>
+            <Input id="nu-code" value={code} onChange={(e) => setCode(e.target.value)} />
+          </div>
+          <div className="space-y-2">
+            <Label>البريد (اختياري)</Label>
+            <Input value={email} onChange={(e) => setEmail(e.target.value)} />
+          </div>
+          <div className="space-y-2">
+            <Label>الصلاحية</Label>
+            <select
+              value={role}
+              onChange={(e) => setRole(e.target.value as UserRole)}
+              className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
+            >
+              <option value="مرشدة طلابية">مرشدة طلابية</option>
+              <option value="مديرة">مديرة</option>
+            </select>
+          </div>
+          <div className="md:col-span-4">
+            <Button onClick={addUser}>
+              <UserPlus /> إضافة مستخدمة
+            </Button>
+          </div>
+        </div>
+        <p className="text-xs text-muted-foreground">
+          كل مرشدة ترى ملفات طالباتها فقط، والمديرة ترى جميع البيانات.
+        </p>
+      </CardContent>
+    </Card>
   );
 }
 
