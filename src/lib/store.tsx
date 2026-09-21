@@ -34,7 +34,7 @@ export function todayISO() {
 }
 
 export function StoreProvider({ children }: { children: ReactNode }) {
-  const [data, setRaw] = useState<AppData>(() => createSeedData());
+  const [raw, setRaw] = useState<AppData>(() => createSeedData());
   const [hydrated, setHydrated] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [currentUserId, setCurrentUserId] = useState<ID | null>(null);
@@ -62,26 +62,52 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!hydrated) return;
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(raw));
     } catch {
       /* storage full */
     }
-  }, [data, hydrated]);
+  }, [raw, hydrated]);
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", theme === "dark");
     if (hydrated) localStorage.setItem(THEME_KEY, theme);
   }, [theme, hydrated]);
 
+  const currentUser = useMemo(
+    () => raw.users.find((u) => u.id === currentUserId && u.active) ?? null,
+    [raw.users, currentUserId],
+  );
+  const isManager = currentUser?.role === "مديرة";
+
+  const data = useMemo<AppData>(() => {
+    if (!currentUser || isManager) return raw;
+    return { ...raw, students: raw.students.filter((s) => s.counselorId === currentUser.id) };
+  }, [raw, currentUser, isManager]);
+
   const value = useMemo<StoreValue>(
     () => ({
       data,
       hydrated,
-      setData: (updater) => setRaw((prev) => updater(prev)),
+      setData: (updater) =>
+        setRaw((prev) => {
+          const next = updater(prev);
+          if (currentUser && !isManager) {
+            return {
+              ...next,
+              students: next.students.map((s) =>
+                s.counselorId ? s : { ...s, counselorId: currentUser.id },
+              ),
+            };
+          }
+          return next;
+        }),
       logActivity: (text: string) =>
         setRaw((prev) => ({
           ...prev,
-          activities: [{ id: newId("a"), date: todayISO(), text }, ...prev.activities].slice(0, 30),
+          activities: [
+            { id: newId("a"), date: todayISO(), text: currentUser ? `${text} — ${currentUser.name}` : text },
+            ...prev.activities,
+          ].slice(0, 30),
         })),
       resetData: () => setRaw(createSeedData()),
       importData: (rawText: string) => {
@@ -96,8 +122,29 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       },
       theme,
       toggleTheme: () => setTheme((t) => (t === "dark" ? "light" : "dark")),
+      currentUser,
+      isManager,
+      signIn: (code: string) => {
+        const user = raw.users.find((u) => u.code.trim() === code.trim() && u.active);
+        if (!user) return false;
+        setCurrentUserId(user.id);
+        return true;
+      },
+      signOut: () => setCurrentUserId(null),
+      createFirstManager: (name: string, code: string) => {
+        const user: AppUser = {
+          id: newId("u"),
+          name,
+          role: "مديرة",
+          code,
+          email: "",
+          active: true,
+        };
+        setRaw((prev) => ({ ...prev, users: [user, ...prev.users] }));
+        setCurrentUserId(user.id);
+      },
     }),
-    [data, hydrated, theme],
+    [data, raw.users, hydrated, theme, currentUser, isManager],
   );
 
   return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;
