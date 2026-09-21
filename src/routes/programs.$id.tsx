@@ -108,7 +108,7 @@ function ProgramDetail() {
 
   function remove() {
     setData((prev) => ({ ...prev, programs: prev.programs.filter((p) => p.id !== id) }));
-    logActivity(`تم حذف برنامج: ${program.name}`);
+    logActivity(`تم حذف برنامج: ${draft.name}`);
     toast.success("تم حذف البرنامج");
   }
 
