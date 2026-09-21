@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CounselorRouteImport } from './routes/counselor'
 import { Route as ProgramsRouteImport } from './routes/programs'
+import { Route as ServicesRouteImport } from './routes/services'
 import { Route as StudentsRouteImport } from './routes/students'
 import { Route as ProgramsIdRouteImport } from './routes/programs.$id'
 import { Route as StudentsIdRouteImport } from './routes/students.$id'
@@ -29,6 +30,11 @@ const CounselorRoute = CounselorRouteImport.update({
 const ProgramsRoute = ProgramsRouteImport.update({
   id: '/programs',
   path: '/programs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesRoute = ServicesRouteImport.update({
+  id: '/services',
+  path: '/services',
   getParentRoute: () => rootRouteImport,
 } as any)
 const StudentsRoute = StudentsRouteImport.update({
@@ -51,6 +57,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/counselor': typeof CounselorRoute
   '/programs': typeof ProgramsRouteWithChildren
+  '/services': typeof ServicesRoute
   '/students': typeof StudentsRouteWithChildren
   '/programs/$id': typeof ProgramsIdRoute
   '/students/$id': typeof StudentsIdRoute
@@ -59,6 +66,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/counselor': typeof CounselorRoute
   '/programs': typeof ProgramsRouteWithChildren
+  '/services': typeof ServicesRoute
   '/students': typeof StudentsRouteWithChildren
   '/programs/$id': typeof ProgramsIdRoute
   '/students/$id': typeof StudentsIdRoute
@@ -68,6 +76,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/counselor': typeof CounselorRoute
   '/programs': typeof ProgramsRouteWithChildren
+  '/services': typeof ServicesRoute
   '/students': typeof StudentsRouteWithChildren
   '/programs/$id': typeof ProgramsIdRoute
   '/students/$id': typeof StudentsIdRoute
@@ -78,6 +87,7 @@ export interface FileRouteTypes {
     | '/'
     | '/counselor'
     | '/programs'
+    | '/services'
     | '/students'
     | '/programs/$id'
     | '/students/$id'
@@ -86,6 +96,7 @@ export interface FileRouteTypes {
     | '/'
     | '/counselor'
     | '/programs'
+    | '/services'
     | '/students'
     | '/programs/$id'
     | '/students/$id'
@@ -94,6 +105,7 @@ export interface FileRouteTypes {
     | '/'
     | '/counselor'
     | '/programs'
+    | '/services'
     | '/students'
     | '/programs/$id'
     | '/students/$id'
@@ -103,6 +115,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CounselorRoute: typeof CounselorRoute
   ProgramsRoute: typeof ProgramsRouteWithChildren
+  ServicesRoute: typeof ServicesRoute
   StudentsRoute: typeof StudentsRouteWithChildren
 }
 
@@ -127,6 +140,13 @@ declare module '@tanstack/react-router' {
       path: '/programs'
       fullPath: '/programs'
       preLoaderRoute: typeof ProgramsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services': {
+      id: '/services'
+      path: '/services'
+      fullPath: '/services'
+      preLoaderRoute: typeof ServicesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/students': {
@@ -181,6 +201,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CounselorRoute: CounselorRoute,
   ProgramsRoute: ProgramsRouteWithChildren,
+  ServicesRoute: ServicesRoute,
   StudentsRoute: StudentsRouteWithChildren,
 }
 export const routeTree = rootRouteImport

@@ -84,7 +84,7 @@ function ServicesPage() {
   const [typeFilter, setTypeFilter] = useState<ServiceType | "الكل">("الكل");
   const [query, setQuery] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [draft, setDraft] = useState<ServiceRecord>(emptyServicengSafe);
+  const [draft, setDraft] = useState<ServiceRecord>(emptyService);
   const [isNew, setIsNew] = useState(false);
 
   const filtered = useMemo(
