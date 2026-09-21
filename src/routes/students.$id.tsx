@@ -65,7 +65,7 @@ function StudentDetail() {
           : s,
       ),
     }));
-    logActivity(`تسجيل متابعة للطالبة ${student.name}: ${action}`);
+    logActivity(`تسجيل متابعة للطالبة ${student?.name ?? ""}: ${action}`);
     setAction("");
     setNote("");
     setDate(todayISO());
