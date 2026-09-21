@@ -63,6 +63,8 @@ export interface Student {
   nextDate: string;
   status: "مفتوحة" | "قيد المتابعة" | "مغلقة";
   timeline: FollowUpEntry[];
+  /** معرّف المرشدة المسؤولة عن الطالبة */
+  counselorId?: ID;
 }
 
 export type ServiceType =
@@ -132,10 +134,14 @@ export interface SchoolSettings {
   notifyTasks: boolean;
 }
 
+export type UserRole = "مديرة" | "مرشدة طلابية";
+
 export interface AppUser {
   id: ID;
   name: string;
-  role: "مديرة" | "مرشدة طلابية" | "معلمة" | "مشرفة";
+  role: UserRole;
+  /** كود الدخول الخاص بالمستخدمة */
+  code: string;
   email: string;
   active: boolean;
 }
