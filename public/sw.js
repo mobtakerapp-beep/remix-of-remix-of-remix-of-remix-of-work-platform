@@ -1,5 +1,5 @@
-const CACHE_NAME = "student-guidance-v1";
-const APP_SHELL = ["/", "/manifest.webmanifest", "/favicon.ico"];
+const CACHE_NAME = "student-guidance-v2";
+const APP_SHELL = ["/", "/manifest.webmanifest", "/app-icon.svg"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
