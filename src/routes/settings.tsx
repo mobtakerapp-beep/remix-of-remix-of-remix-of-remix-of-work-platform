@@ -192,12 +192,18 @@ function SettingsPage() {
 }
 
 function HandoverButton() {
-  const { isManager, resetData, signOut } = useStore();
-  if (!isManager) return null;
+  const { isManager, currentUser, resetData, signOut } = useStore();
+  if (!isManager || !currentUser) return null;
   return (
     <Button
       variant="destructive"
       onClick={() => {
+        const entered = prompt("لتأكيد التسليم، أدخلي كود دخول المديرة:");
+        if (entered === null) return;
+        if (entered.trim() !== currentUser.code.trim()) {
+          toast.error("الكود غير صحيح");
+          return;
+        }
         if (!confirm("سيتم مسح كل الحسابات والبيانات وتسليم المنصة لصاحبتها. متأكدة؟")) return;
         resetData();
         signOut();
