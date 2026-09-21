@@ -1,10 +1,11 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 
 import { createSeedData } from "./seed";
-import type { AppData, ID } from "./types";
+import type { AppData, AppUser, ID } from "./types";
 
 const STORAGE_KEY = "tawjih-platform-data-v3";
 const THEME_KEY = "tawjih-platform-theme";
+const SESSION_KEY = "tawjih-platform-session";
 
 interface StoreValue {
   data: AppData;
@@ -15,6 +16,11 @@ interface StoreValue {
   importData: (raw: string) => boolean;
   theme: "light" | "dark";
   toggleTheme: () => void;
+  currentUser: AppUser | null;
+  isManager: boolean;
+  signIn: (code: string) => boolean;
+  signOut: () => void;
+  createFirstManager: (name: string, code: string) => void;
 }
 
 const StoreContext = createContext<StoreValue | null>(null);
@@ -31,6 +37,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [data, setRaw] = useState<AppData>(() => createSeedData());
   const [hydrated, setHydrated] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark">("light");
+  const [currentUserId, setCurrentUserId] = useState<ID | null>(null);
 
   useEffect(() => {
     try {
@@ -38,11 +45,19 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       if (stored) setRaw(JSON.parse(stored) as AppData);
       const storedTheme = localStorage.getItem(THEME_KEY);
       if (storedTheme === "dark" || storedTheme === "light") setTheme(storedTheme);
+      const session = localStorage.getItem(SESSION_KEY);
+      if (session) setCurrentUserId(session);
     } catch {
       /* ignore corrupt storage */
     }
     setHydrated(true);
   }, []);
+
+  useEffect(() => {
+    if (!hydrated) return;
+    if (currentUserId) localStorage.setItem(SESSION_KEY, currentUserId);
+    else localStorage.removeItem(SESSION_KEY);
+  }, [currentUserId, hydrated]);
 
   useEffect(() => {
     if (!hydrated) return;
