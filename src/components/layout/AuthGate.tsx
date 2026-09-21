@@ -45,6 +45,12 @@ export function AuthGate() {
         <CardContent>
           <form onSubmit={submit} className="space-y-4">
             {firstRun && (
+              <p className="rounded-lg bg-muted p-3 text-xs text-muted-foreground">
+                هذا أول حساب في المنصة، ويكون حساب المديرة (صاحبة المنصة). يُفضّل أن تنشئه هي بنفسها
+                وتختار كود دخولها.
+              </p>
+            )}
+            {firstRun && (
               <div className="space-y-2">
                 <Label htmlFor="mgr-name">اسم المديرة</Label>
                 <Input id="mgr-name" value={name} onChange={(e) => setName(e.target.value)} />
