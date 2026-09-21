@@ -10,9 +10,11 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CalendarRouteImport } from './routes/calendar'
 import { Route as CounselorRouteImport } from './routes/counselor'
 import { Route as PlanRouteImport } from './routes/plan'
 import { Route as ProgramsRouteImport } from './routes/programs'
+import { Route as ReportsRouteImport } from './routes/reports'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as StudentsRouteImport } from './routes/students'
 import { Route as ProgramsIdRouteImport } from './routes/programs.$id'
@@ -21,6 +23,11 @@ import { Route as StudentsIdRouteImport } from './routes/students.$id'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CalendarRoute = CalendarRouteImport.update({
+  id: '/calendar',
+  path: '/calendar',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CounselorRoute = CounselorRouteImport.update({
@@ -36,6 +43,11 @@ const PlanRoute = PlanRouteImport.update({
 const ProgramsRoute = ProgramsRouteImport.update({
   id: '/programs',
   path: '/programs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReportsRoute = ReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ServicesRoute = ServicesRouteImport.update({
@@ -61,9 +73,11 @@ const StudentsIdRoute = StudentsIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/calendar': typeof CalendarRoute
   '/counselor': typeof CounselorRoute
   '/plan': typeof PlanRoute
   '/programs': typeof ProgramsRouteWithChildren
+  '/reports': typeof ReportsRoute
   '/services': typeof ServicesRoute
   '/students': typeof StudentsRouteWithChildren
   '/programs/$id': typeof ProgramsIdRoute
@@ -71,9 +85,11 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/calendar': typeof CalendarRoute
   '/counselor': typeof CounselorRoute
   '/plan': typeof PlanRoute
   '/programs': typeof ProgramsRouteWithChildren
+  '/reports': typeof ReportsRoute
   '/services': typeof ServicesRoute
   '/students': typeof StudentsRouteWithChildren
   '/programs/$id': typeof ProgramsIdRoute
@@ -82,9 +98,11 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/calendar': typeof CalendarRoute
   '/counselor': typeof CounselorRoute
   '/plan': typeof PlanRoute
   '/programs': typeof ProgramsRouteWithChildren
+  '/reports': typeof ReportsRoute
   '/services': typeof ServicesRoute
   '/students': typeof StudentsRouteWithChildren
   '/programs/$id': typeof ProgramsIdRoute
@@ -94,9 +112,11 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/calendar'
     | '/counselor'
     | '/plan'
     | '/programs'
+    | '/reports'
     | '/services'
     | '/students'
     | '/programs/$id'
@@ -104,9 +124,11 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/calendar'
     | '/counselor'
     | '/plan'
     | '/programs'
+    | '/reports'
     | '/services'
     | '/students'
     | '/programs/$id'
@@ -114,9 +136,11 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/calendar'
     | '/counselor'
     | '/plan'
     | '/programs'
+    | '/reports'
     | '/services'
     | '/students'
     | '/programs/$id'
@@ -125,9 +149,11 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CalendarRoute: typeof CalendarRoute
   CounselorRoute: typeof CounselorRoute
   PlanRoute: typeof PlanRoute
   ProgramsRoute: typeof ProgramsRouteWithChildren
+  ReportsRoute: typeof ReportsRoute
   ServicesRoute: typeof ServicesRoute
   StudentsRoute: typeof StudentsRouteWithChildren
 }
@@ -139,6 +165,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/calendar': {
+      id: '/calendar'
+      path: '/calendar'
+      fullPath: '/calendar'
+      preLoaderRoute: typeof CalendarRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/counselor': {
@@ -160,6 +193,13 @@ declare module '@tanstack/react-router' {
       path: '/programs'
       fullPath: '/programs'
       preLoaderRoute: typeof ProgramsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reports': {
+      id: '/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof ReportsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/services': {
@@ -219,9 +259,11 @@ const StudentsRouteWithChildren = StudentsRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CalendarRoute: CalendarRoute,
   CounselorRoute: CounselorRoute,
   PlanRoute: PlanRoute,
   ProgramsRoute: ProgramsRouteWithChildren,
+  ReportsRoute: ReportsRoute,
   ServicesRoute: ServicesRoute,
   StudentsRoute: StudentsRouteWithChildren,
 }
