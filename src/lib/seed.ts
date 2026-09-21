@@ -514,7 +514,7 @@ export function createSeedData(): AppData {
       },
     ],
     settings: {
-      schoolName: "المتوسطة الثانية عشرة",
+      schoolName: "",
       logoUrl: "",
       academicYear: "١٤٤٧ هـ",
       term: "الفصل الدراسي الأول",
