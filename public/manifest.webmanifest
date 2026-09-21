@@ -1,10 +1,13 @@
 {
-  "name": "إرشاد طلابي",
+  "name": "منصة التوجيه الطلابي الذكية",
   "short_name": "إرشاد طلابي",
+  "description": "إدارة ذكية للتوجيه الطلابي والمتابعة والإرشاد المدرسي.",
   "lang": "ar",
   "dir": "rtl",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
+  "orientation": "portrait-primary",
   "background_color": "#ffffff",
   "theme_color": "#23418f",
   "icons": [
