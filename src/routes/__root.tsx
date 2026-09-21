@@ -129,6 +129,14 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
+  useEffect(() => {
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/sw.js").catch(() => {
+        // Service worker registration is optional; the app remains fully usable without it.
+      });
+    }
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <StoreProvider>
