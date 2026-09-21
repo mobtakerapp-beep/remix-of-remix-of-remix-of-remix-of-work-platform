@@ -37,17 +37,17 @@ export const DAYS = ["الأحد", "الاثنين", "الثلاثاء", "الأ
 export function createSeedData(): AppData {
   return {
     counselor: {
-      name: "أ. نورة بنت عبدالله القحطاني",
-      jobNumber: "١٠٤٥٢٣٧",
-      school: "المتوسطة الثانية عشرة",
-      educationAdministration: "إدارة تعليم الرياض",
-      stage: "المرحلة المتوسطة",
+      name: "",
+      jobNumber: "",
+      school: "",
+      educationAdministration: "",
+      stage: "",
       academicYear: "١٤٤٧ هـ",
       term: "الفصل الدراسي الأول",
-      email: "noura.counselor@moe.edu.sa",
-      phone: "٠٥٥٤٤٣٣٢٢١",
-      qualification: "بكالوريوس علم نفس - ماجستير إرشاد تربوي",
-      experienceYears: "١٢ سنة",
+      email: "",
+      phone: "",
+      qualification: "",
+      experienceYears: "",
     },
     programs: [
       {
@@ -514,7 +514,7 @@ export function createSeedData(): AppData {
       },
     ],
     settings: {
-      schoolName: "المتوسطة الثانية عشرة",
+      schoolName: "",
       logoUrl: "",
       academicYear: "١٤٤٧ هـ",
       term: "الفصل الدراسي الأول",
@@ -522,16 +522,7 @@ export function createSeedData(): AppData {
       notifyFollowUps: true,
       notifyTasks: true,
     },
-    users: [
-      { id: "u1", name: "أ. نورة القحطاني", role: "مرشدة طلابية", email: "noura@moe.edu.sa", active: true },
-      { id: "u2", name: "أ. هند العمري", role: "مديرة", email: "hind@moe.edu.sa", active: true },
-      { id: "u3", name: "أ. عبير الشهري", role: "مشرفة", email: "abeer@moe.edu.sa", active: false },
-    ],
-    activities: [
-      { id: "a1", date: "2026-09-22", text: "تم تسجيل جلسة فردية جديدة (قلق الاختبارات)" },
-      { id: "a2", date: "2026-09-21", text: "تحديث كشف الغياب ورصد ٦ حالات جديدة" },
-      { id: "a3", date: "2026-09-20", text: "إضافة طالبة جديدة إلى تصنيف الضعيفات" },
-      { id: "a4", date: "2026-09-17", text: "اجتماع لجنة التوجيه الطلابي ومناقشة ٦ حالات" },
-    ],
+    users: [],
+    activities: [],
   };
 }

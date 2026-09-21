@@ -3,7 +3,7 @@ import { createContext, useContext, useEffect, useMemo, useState, type ReactNode
 import { createSeedData } from "./seed";
 import type { AppData, ID } from "./types";
 
-const STORAGE_KEY = "tawjih-platform-data-v2";
+const STORAGE_KEY = "tawjih-platform-data-v3";
 const THEME_KEY = "tawjih-platform-theme";
 
 interface StoreValue {
