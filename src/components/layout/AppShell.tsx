@@ -178,9 +178,15 @@ export function AppShell({
                 <Settings />
               </Button>
             </Link>
+            <Button variant="ghost" size="icon" onClick={signOut} aria-label="تسجيل الخروج">
+              <LogOut />
+            </Button>
             <div className="hidden ps-2 text-start leading-tight sm:block">
-              <p className="text-sm font-semibold">{data.counselor.name}</p>
-              <p className="text-xs text-muted-foreground">{data.settings.schoolName}</p>
+              <p className="text-sm font-semibold">{currentUser.name}</p>
+              <p className="text-xs text-muted-foreground">
+                {currentUser.role}
+                {data.settings.schoolName ? ` · ${data.settings.schoolName}` : ""}
+              </p>
             </div>
           </div>
         </div>
