@@ -180,9 +180,31 @@ function SettingsPage() {
           >
             <RotateCcw /> تفريغ جميع البيانات
           </Button>
+          <HandoverButton />
+          <p className="text-xs text-muted-foreground">
+            «تسليم المنصة» يمسح كل الحسابات والبيانات ويرجّع شاشة إنشاء حساب المديرة، عشان صاحبة المنصة
+            تنشئ حسابها بنفسها.
+          </p>
         </CardContent>
       </Card>
     </AppShell>
+  );
+}
+
+function HandoverButton() {
+  const { isManager, resetData, signOut } = useStore();
+  if (!isManager) return null;
+  return (
+    <Button
+      variant="destructive"
+      onClick={() => {
+        if (!confirm("سيتم مسح كل الحسابات والبيانات وتسليم المنصة لصاحبتها. متأكدة؟")) return;
+        resetData();
+        signOut();
+      }}
+    >
+      <RotateCcw /> تسليم المنصة (بدء من الصفر)
+    </Button>
   );
 }
 
