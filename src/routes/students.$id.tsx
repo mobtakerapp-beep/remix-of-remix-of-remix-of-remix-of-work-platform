@@ -113,9 +113,9 @@ function StudentDetail() {
         </Card>
         <Card className="p-5">
           <p className="text-xs text-muted-foreground">الحالة</p>
-          <p className="mt-1 text-sm font-medium">
+          <div className="mt-1">
             <Badge variant="secondary">{student.status}</Badge>
-          </p>
+          </div>
         </Card>
       </div>
 
