@@ -46,13 +46,14 @@ export function AuthGate() {
           <form onSubmit={submit} className="space-y-4">
             {firstRun && (
               <div className="space-y-2">
-                <Label>اسم المديرة</Label>
-                <Input value={name} onChange={(e) => setName(e.target.value)} />
+                <Label htmlFor="mgr-name">اسم المديرة</Label>
+                <Input id="mgr-name" value={name} onChange={(e) => setName(e.target.value)} />
               </div>
             )}
             <div className="space-y-2">
-              <Label>كود الدخول</Label>
+              <Label htmlFor="login-code">كود الدخول</Label>
               <Input
+                id="login-code"
                 type="password"
                 inputMode="numeric"
                 value={code}
