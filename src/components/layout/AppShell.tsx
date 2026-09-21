@@ -21,6 +21,11 @@ import {
 } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 
+interface BeforeInstallPromptEvent extends Event {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: "accepted" | "dismissed"; platform: string }>;
+}
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -168,7 +173,7 @@ export function AppShell({
                 variant="default"
                 size="sm"
                 onClick={installApp}
-                className="hidden gap-2 rounded-xl sm:inline-flex"
+                className="gap-2 rounded-xl"
                 aria-label="تثبيت التطبيق"
               >
                 <Download className="size-4" />
