@@ -1,10 +1,11 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 
 import { createSeedData } from "./seed";
-import type { AppData, ID } from "./types";
+import type { AppData, AppUser, ID } from "./types";
 
 const STORAGE_KEY = "tawjih-platform-data-v3";
 const THEME_KEY = "tawjih-platform-theme";
+const SESSION_KEY = "tawjih-platform-session";
 
 interface StoreValue {
   data: AppData;
@@ -15,6 +16,11 @@ interface StoreValue {
   importData: (raw: string) => boolean;
   theme: "light" | "dark";
   toggleTheme: () => void;
+  currentUser: AppUser | null;
+  isManager: boolean;
+  signIn: (code: string) => boolean;
+  signOut: () => void;
+  createFirstManager: (name: string, code: string) => void;
 }
 
 const StoreContext = createContext<StoreValue | null>(null);
