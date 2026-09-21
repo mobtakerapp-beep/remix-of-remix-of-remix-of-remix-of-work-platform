@@ -130,30 +130,7 @@ function SettingsPage() {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">المستخدمون والصلاحيات (واجهة تجريبية)</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-2">
-          {data.users.map((u) => (
-            <div key={u.id} className="flex items-center justify-between rounded-xl border border-border/70 px-4 py-3">
-              <div>
-                <p className="text-sm font-medium">{u.name}</p>
-                <p className="text-xs text-muted-foreground">{u.email}</p>
-              </div>
-              <div className="flex items-center gap-2">
-                <Badge variant="secondary">{u.role}</Badge>
-                <Badge variant={u.active ? "default" : "outline"}>
-                  {u.active ? "نشط" : "موقوف"}
-                </Badge>
-              </div>
-            </div>
-          ))}
-          <p className="text-xs text-muted-foreground">
-            هذه نسخة تجريبية؛ إدارة المستخدمين الفعلية تتطلب تفعيل تسجيل الدخول.
-          </p>
-        </CardContent>
-      </Card>
+      <UsersCard />
 
       <Card>
         <CardHeader>
