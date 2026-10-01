@@ -9,13 +9,16 @@ import { Label } from "@/components/ui/label";
 import { useStore } from "@/lib/store";
 
 export function AuthGate() {
-  const { data, users0, signIn, createFirstManager } = useStoreSafe();
+  const { data, users0, signIn, createFirstManager, createUserAsManager } = useStoreSafe();
   const [code, setCode] = useState("");
   const [name, setName] = useState("");
+  const [managerCode, setManagerCode] = useState("");
+  const [creating, setCreating] = useState(false);
   const firstRun = users0 === 0;
 
   function submit(e: React.FormEvent) {
     e.preventDefault();
+
     if (firstRun) {
       if (!name.trim() || code.trim().length < 4) {
         toast.error("أدخلي الاسم وكود دخول من 4 أرقام أو أكثر");
@@ -25,6 +28,27 @@ export function AuthGate() {
       toast.success("تم إنشاء حساب المديرة");
       return;
     }
+
+    if (creating) {
+      if (!managerCode.trim() || managerCode.trim().length < 4) {
+        toast.error("أدخلي كود المديرة للسماح بإنشاء الحساب");
+        return;
+      }
+      if (!name.trim() || code.trim().length < 4) {
+        toast.error("أدخلي اسم المستخدمة وكود دخول من 4 أرقام أو أكثر");
+        return;
+      }
+
+      const ok = createUserAsManager(managerCode.trim(), name.trim(), code.trim());
+      if (!ok) {
+        toast.error("كود المديرة غير صحيح، أو كود الدخول مستخدم مسبقاً");
+        return;
+      }
+
+      toast.success("تم إنشاء الحساب وتسجيل الدخول");
+      return;
+    }
+
     if (!signIn(code)) toast.error("كود الدخول غير صحيح أو الحساب موقوف");
   }
 
@@ -36,12 +60,13 @@ export function AuthGate() {
             <GraduationCap className="size-6" />
           </span>
           <CardTitle className="mt-3 font-display text-lg">
-            {firstRun ? "إنشاء حساب المديرة" : "تسجيل الدخول"}
+            {firstRun ? "إنشاء حساب المديرة" : creating ? "إنشاء حساب جديد" : "تسجيل الدخول"}
           </CardTitle>
           <p className="text-sm text-muted-foreground">
             {data.settings.schoolName || "منصة التوجيه الطلابي"}
           </p>
         </CardHeader>
+
         <CardContent>
           <form onSubmit={submit} className="space-y-4">
             {firstRun && (
@@ -50,12 +75,33 @@ export function AuthGate() {
                 وتختار كود دخولها.
               </p>
             )}
-            {firstRun && (
+
+            {creating && (
+              <p className="rounded-lg bg-muted p-3 text-xs text-muted-foreground">
+                إنشاء الحسابات الجديدة متاح بإذن المديرة. أدخلي كود المديرة مرة واحدة لاعتماد الحساب.
+              </p>
+            )}
+
+            {creating && (
               <div className="space-y-2">
-                <Label htmlFor="mgr-name">اسم المديرة</Label>
+                <Label htmlFor="manager-code">كود المديرة</Label>
+                <Input
+                  id="manager-code"
+                  type="password"
+                  inputMode="numeric"
+                  value={managerCode}
+                  onChange={(e) => setManagerCode(e.target.value)}
+                />
+              </div>
+            )}
+
+            {(firstRun || creating) && (
+              <div className="space-y-2">
+                <Label htmlFor="mgr-name">{firstRun ? "اسم المديرة" : "اسم المستخدمة"}</Label>
                 <Input id="mgr-name" value={name} onChange={(e) => setName(e.target.value)} />
               </div>
             )}
+
             <div className="space-y-2">
               <Label htmlFor="login-code">كود الدخول</Label>
               <Input
@@ -66,9 +112,26 @@ export function AuthGate() {
                 onChange={(e) => setCode(e.target.value)}
               />
             </div>
+
             <Button type="submit" className="w-full">
-              {firstRun ? "إنشاء الحساب والدخول" : "دخول"}
+              {firstRun ? "إنشاء الحساب والدخول" : creating ? "إنشاء الحساب والدخول" : "دخول"}
             </Button>
+
+            {!firstRun && (
+              <Button
+                type="button"
+                variant="ghost"
+                className="w-full"
+                onClick={() => {
+                  setCreating((value) => !value);
+                  setName("");
+                  setCode("");
+                  setManagerCode("");
+                }}
+              >
+                {creating ? "العودة إلى تسجيل الدخول" : "إنشاء حساب جديد"}
+              </Button>
+            )}
           </form>
         </CardContent>
       </Card>
@@ -78,5 +141,5 @@ export function AuthGate() {
 
 function useStoreSafe() {
   const store = useStore();
-  return { ...store, users0: store.data.users.length };
+  return { ...store, users0: Array.isArray(store.data.users) ? store.data.users.length : 0 };
 }
