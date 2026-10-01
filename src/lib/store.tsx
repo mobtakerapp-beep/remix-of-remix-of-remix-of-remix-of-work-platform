@@ -21,6 +21,7 @@ interface StoreValue {
   signIn: (code: string) => boolean;
   signOut: () => void;
   createFirstManager: (name: string, code: string) => void;
+  createUserAsManager: (managerCode: string, name: string, code: string) => boolean;
 }
 
 const StoreContext = createContext<StoreValue | null>(null);
@@ -33,6 +34,16 @@ export function todayISO() {
   return new Date().toISOString().slice(0, 10);
 }
 
+function normalizeStoredData(parsed: Partial<AppData>): AppData {
+  const seed = createSeedData();
+  return {
+    ...seed,
+    ...parsed,
+    users: Array.isArray(parsed.users) ? parsed.users : [],
+    activities: Array.isArray(parsed.activities) ? parsed.activities : seed.activities,
+  };
+}
+
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [raw, setRaw] = useState<AppData>(() => createSeedData());
   const [hydrated, setHydrated] = useState(false);
@@ -42,7 +53,10 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) setRaw(JSON.parse(stored) as AppData);
+      if (stored) {
+        const parsed = JSON.parse(stored) as Partial<AppData>;
+        setRaw(normalizeStoredData(parsed));
+      }
       const storedTheme = localStorage.getItem(THEME_KEY);
       if (storedTheme === "dark" || storedTheme === "light") setTheme(storedTheme);
       const session = localStorage.getItem(SESSION_KEY);
@@ -112,9 +126,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       resetData: () => setRaw(createSeedData()),
       importData: (rawText: string) => {
         try {
-          const parsed = JSON.parse(rawText) as AppData;
+          const parsed = JSON.parse(rawText) as Partial<AppData>;
           if (!parsed || !Array.isArray(parsed.programs)) return false;
-          setRaw(parsed);
+          setRaw(normalizeStoredData(parsed));
           return true;
         } catch {
           return false;
@@ -142,6 +156,24 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         };
         setRaw((prev) => ({ ...prev, users: [user, ...prev.users] }));
         setCurrentUserId(user.id);
+      },
+      createUserAsManager: (managerCode: string, name: string, code: string) => {
+        const manager = raw.users.find(
+          (u) => u.role === "مديرة" && u.active && u.code.trim() === managerCode.trim(),
+        );
+        if (!manager || raw.users.some((u) => u.code.trim() === code.trim())) return false;
+
+        const user: AppUser = {
+          id: newId("u"),
+          name,
+          role: "مرشدة طلابية",
+          code: code.trim(),
+          email: "",
+          active: true,
+        };
+        setRaw((prev) => ({ ...prev, users: [...prev.users, user] }));
+        setCurrentUserId(user.id);
+        return true;
       },
     }),
     [data, raw.users, hydrated, theme, currentUser, isManager],
