@@ -9,10 +9,9 @@ import { Label } from "@/components/ui/label";
 import { useStore } from "@/lib/store";
 
 export function AuthGate() {
-  const { data, users0, signIn, createFirstManager, createUserAsManager } = useStoreSafe();
+  const { data, users0, signIn, createFirstManager, createUser } = useStoreSafe();
   const [code, setCode] = useState("");
   const [name, setName] = useState("");
-  const [managerCode, setManagerCode] = useState("");
   const [creating, setCreating] = useState(false);
   const firstRun = users0 === 0;
 
@@ -30,18 +29,14 @@ export function AuthGate() {
     }
 
     if (creating) {
-      if (!managerCode.trim() || managerCode.trim().length < 4) {
-        toast.error("أدخلي كود المديرة للسماح بإنشاء الحساب");
-        return;
-      }
       if (!name.trim() || code.trim().length < 4) {
         toast.error("أدخلي اسم المستخدمة وكود دخول من 4 أرقام أو أكثر");
         return;
       }
 
-      const ok = createUserAsManager(managerCode.trim(), name.trim(), code.trim());
+      const ok = createUser(name.trim(), code.trim());
       if (!ok) {
-        toast.error("كود المديرة غير صحيح، أو كود الدخول مستخدم مسبقاً");
+        toast.error("كود الدخول مستخدم مسبقاً");
         return;
       }
 
@@ -78,21 +73,8 @@ export function AuthGate() {
 
             {creating && (
               <p className="rounded-lg bg-muted p-3 text-xs text-muted-foreground">
-                إنشاء الحسابات الجديدة متاح بإذن المديرة. أدخلي كود المديرة مرة واحدة لاعتماد الحساب.
+                يمكن لأي مستخدمة إنشاء حساب جديد مباشرة باستخدام اسمها وكود دخول خاص بها.
               </p>
-            )}
-
-            {creating && (
-              <div className="space-y-2">
-                <Label htmlFor="manager-code">كود المديرة</Label>
-                <Input
-                  id="manager-code"
-                  type="password"
-                  inputMode="numeric"
-                  value={managerCode}
-                  onChange={(e) => setManagerCode(e.target.value)}
-                />
-              </div>
             )}
 
             {(firstRun || creating) && (
@@ -126,7 +108,6 @@ export function AuthGate() {
                   setCreating((value) => !value);
                   setName("");
                   setCode("");
-                  setManagerCode("");
                 }}
               >
                 {creating ? "العودة إلى تسجيل الدخول" : "إنشاء حساب جديد"}
