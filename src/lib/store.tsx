@@ -21,7 +21,7 @@ interface StoreValue {
   signIn: (code: string) => boolean;
   signOut: () => void;
   createFirstManager: (name: string, code: string) => void;
-  createUserAsManager: (managerCode: string, name: string, code: string) => boolean;
+  createUser: (name: string, code: string) => boolean;
 }
 
 const StoreContext = createContext<StoreValue | null>(null);
@@ -157,11 +157,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         setRaw((prev) => ({ ...prev, users: [user, ...prev.users] }));
         setCurrentUserId(user.id);
       },
-      createUserAsManager: (managerCode: string, name: string, code: string) => {
-        const manager = raw.users.find(
-          (u) => u.role === "مديرة" && u.active && u.code.trim() === managerCode.trim(),
-        );
-        if (!manager || raw.users.some((u) => u.code.trim() === code.trim())) return false;
+      createUser: (name: string, code: string) => {
+        if (raw.users.some((u) => u.code.trim() === code.trim())) return false;
 
         const user: AppUser = {
           id: newId("u"),
