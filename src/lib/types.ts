@@ -142,7 +142,6 @@ export interface AppUser {
   role: UserRole;
   /** كود الدخول الخاص بالمستخدمة */
   code: string;
-  email: string;
   active: boolean;
 }
 
