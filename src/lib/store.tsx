@@ -18,10 +18,10 @@ interface StoreValue {
   toggleTheme: () => void;
   currentUser: AppUser | null;
   isManager: boolean;
-  signIn: (code: string) => boolean;
+  signIn: (name: string, password: string) => boolean;
   signOut: () => void;
-  createFirstManager: (name: string, code: string) => void;
-  createUser: (name: string, code: string) => boolean;
+  createFirstManager: (name: string, password: string) => void;
+  createUser: (name: string, password: string) => boolean;
 }
 
 const StoreContext = createContext<StoreValue | null>(null);
@@ -138,33 +138,40 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       toggleTheme: () => setTheme((t) => (t === "dark" ? "light" : "dark")),
       currentUser,
       isManager,
-      signIn: (code: string) => {
-        const user = raw.users.find((u) => u.code.trim() === code.trim() && u.active);
+      signIn: (name: string, password: string) => {
+        const normalizedName = name.trim().toLocaleLowerCase();
+        const user = raw.users.find(
+          (u) =>
+            u.name.trim().toLocaleLowerCase() === normalizedName &&
+            u.code.trim() === password.trim() &&
+            u.active,
+        );
         if (!user) return false;
         setCurrentUserId(user.id);
         return true;
       },
       signOut: () => setCurrentUserId(null),
-      createFirstManager: (name: string, code: string) => {
+      createFirstManager: (name: string, password: string) => {
         const user: AppUser = {
           id: newId("u"),
           name,
           role: "مديرة",
-          code,
+          code: password.trim(),
           email: "",
           active: true,
         };
         setRaw((prev) => ({ ...prev, users: [user, ...prev.users] }));
         setCurrentUserId(user.id);
       },
-      createUser: (name: string, code: string) => {
-        if (raw.users.some((u) => u.code.trim() === code.trim())) return false;
+      createUser: (name: string, password: string) => {
+        const normalizedName = name.trim().toLocaleLowerCase();
+        if (raw.users.some((u) => u.name.trim().toLocaleLowerCase() === normalizedName)) return false;
 
         const user: AppUser = {
           id: newId("u"),
           name,
           role: "مرشدة طلابية",
-          code: code.trim(),
+          code: password.trim(),
           email: "",
           active: true,
         };
