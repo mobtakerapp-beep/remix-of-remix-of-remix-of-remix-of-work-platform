@@ -157,7 +157,6 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           name,
           role: "مديرة",
           code: password.trim(),
-          email: "",
           active: true,
         };
         setRaw((prev) => ({ ...prev, users: [user, ...prev.users] }));
@@ -172,7 +171,6 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           name,
           role: "مرشدة طلابية",
           code: password.trim(),
-          email: "",
           active: true,
         };
         setRaw((prev) => ({ ...prev, users: [...prev.users, user] }));
