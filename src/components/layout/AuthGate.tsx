@@ -12,7 +12,7 @@ export function AuthGate() {
   const { data, users0, signIn, createFirstManager, createUser } = useStoreSafe();
   const [code, setCode] = useState("");
   const [name, setName] = useState("");
-  const [creating, setCreating] = useState(false);
+  const [creating, setCreating] = useState(true);
   const firstRun = users0 === 0;
 
   function submit(e: React.FormEvent) {
@@ -20,7 +20,7 @@ export function AuthGate() {
 
     if (firstRun) {
       if (!name.trim() || code.trim().length < 4) {
-        toast.error("أدخلي الاسم وكود دخول من 4 أرقام أو أكثر");
+        toast.error("أدخلي الاسم وكلمة المرور (4 أحرف أو أرقام على الأقل)");
         return;
       }
       createFirstManager(name.trim(), code.trim());
@@ -30,13 +30,13 @@ export function AuthGate() {
 
     if (creating) {
       if (!name.trim() || code.trim().length < 4) {
-        toast.error("أدخلي اسم المستخدمة وكود دخول من 4 أرقام أو أكثر");
+        toast.error("أدخلي الاسم وكلمة المرور (4 أحرف أو أرقام على الأقل)");
         return;
       }
 
       const ok = createUser(name.trim(), code.trim());
       if (!ok) {
-        toast.error("كود الدخول مستخدم مسبقاً");
+        toast.error("الاسم مستخدم بالفعل");
         return;
       }
 
@@ -44,7 +44,7 @@ export function AuthGate() {
       return;
     }
 
-    if (!signIn(code)) toast.error("كود الدخول غير صحيح أو الحساب موقوف");
+    if (!signIn(name.trim(), code.trim())) toast.error("الاسم أو كلمة المرور غير صحيحة أو الحساب موقوف");
   }
 
   return (
@@ -55,7 +55,7 @@ export function AuthGate() {
             <GraduationCap className="size-6" />
           </span>
           <CardTitle className="mt-3 font-display text-lg">
-            {firstRun ? "إنشاء حساب المديرة" : creating ? "إنشاء حساب جديد" : "تسجيل الدخول"}
+            {firstRun || creating ? "إنشاء حساب جديد" : "تسجيل الدخول"}
           </CardTitle>
           <p className="text-sm text-muted-foreground">
             {data.settings.schoolName || "منصة التوجيه الطلابي"}
@@ -73,30 +73,30 @@ export function AuthGate() {
 
             {creating && (
               <p className="rounded-lg bg-muted p-3 text-xs text-muted-foreground">
-                يمكن لأي مستخدمة إنشاء حساب جديد مباشرة باستخدام اسمها وكود دخول خاص بها.
+                يمكن لأي مستخدمة إنشاء حساب جديد مباشرة باستخدام اسمها وكلمة مرور خاصة بها.
               </p>
             )}
 
             {(firstRun || creating) && (
               <div className="space-y-2">
-                <Label htmlFor="mgr-name">{firstRun ? "اسم المديرة" : "اسم المستخدمة"}</Label>
+                <Label htmlFor="mgr-name">{"الاسم"}</Label>
                 <Input id="mgr-name" value={name} onChange={(e) => setName(e.target.value)} />
               </div>
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="login-code">كود الدخول</Label>
+              <Label htmlFor="login-code">كلمة المرور</Label>
               <Input
                 id="login-code"
                 type="password"
-                inputMode="numeric"
+                autoComplete={creating ? "new-password" : "current-password"}
                 value={code}
                 onChange={(e) => setCode(e.target.value)}
               />
             </div>
 
             <Button type="submit" className="w-full">
-              {firstRun ? "إنشاء الحساب والدخول" : creating ? "إنشاء الحساب والدخول" : "دخول"}
+              {firstRun || creating ? "إنشاء الحساب والدخول" : "دخول"}
             </Button>
 
             {!firstRun && (
@@ -110,7 +110,7 @@ export function AuthGate() {
                   setCode("");
                 }}
               >
-                {creating ? "العودة إلى تسجيل الدخول" : "إنشاء حساب جديد"}
+                {creating ? "لدي حساب بالفعل — تسجيل الدخول" : "إنشاء حساب جديد"}
               </Button>
             )}
           </form>
